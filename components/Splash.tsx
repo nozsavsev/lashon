@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const SplashScreen = (props: { root: string, onSplashExitStart: () => void, disabled?: boolean, instant?: boolean }) => {
+const SplashScreen = (props: { root: string, onSplashExitStart: () => void, disabled?: boolean, instant?: boolean, autostart?: boolean }) => {
 
     const [clicked, setClicked] = useState(false);
     const [initialEnded, setInitialEnded] = useState(false);
@@ -13,16 +13,23 @@ const SplashScreen = (props: { root: string, onSplashExitStart: () => void, disa
             if (props.onSplashExitStart)
                 props.onSplashExitStart()
 
+        if (props.autostart) {
+            setInterval(() => {
+                setInitialEnded(true)
+                setClicked(true)
+            }, 200);
+        }
+
     }, [])
 
     if (!secondEnded && !props.disabled)
         return <motion.div className='w-screen h-screen flex items-center justify-center bg-transparent text-black select-none absolute top-0 left-0'
-            onClick={() => setClicked(true)}
+            onClick={() => { if (!clicked) setClicked(true); }}
             animate={{ opacity: 1 }}
-            transition={{ duration: props.instant ? 0 : initialEnded ? 0.5 : 0.3 }}>
+            transition={{ duration: props.instant ? 0 : initialEnded ? 0.5 : 0.3, }}>
 
             <motion.div
-                initial={{ opacity: 0.1, y: 100 }}
+                initial={{ opacity: 0.1, y: 0 }}
                 animate={{
                     opacity: clicked ? 0 : 1,
                     y: 0,
