@@ -92,7 +92,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
         }}
     >
 
-        <Transitional_ZoomIn instant StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
+        <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
             {
                 !usePC ? mbOptions?.map((option, index) => {
 
@@ -118,7 +118,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
 
         </Transitional_ZoomIn>
 
-        <SplashScreen disabled autostart root={root as string} onSplashExitStart={() => {
+        <SplashScreen autostart root={root as string} onSplashExitStart={() => {
             setSplashOut(true);
         }} />
 
