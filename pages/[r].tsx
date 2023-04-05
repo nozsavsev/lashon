@@ -4,11 +4,14 @@ import React, { Component, ReactElement, useCallback, useEffect, useState } from
 import Filler from "../components/Filler";
 import SplashScreen from "../components/Splash";
 import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
+import { Word } from "@prisma/client";
 
-const LinerContentPC = (props: { fsize: string, root: string, first_option: string, second_option: string }) => {
+const LinerContentPC = (props: { fsize: string, root: string, first_option: string, second_option: string, onOption: any }) => {
 
     return <div className="flex justify-around text-neutral-500">
-        <div className={`w-fit h-fit font-semibold select-none flex justify-center cursor-pointer ease-in-out duration-300 items-center hover:scale-125 ${props.root !== "404" ? "text-white font-semibold" : "font-thin"}`} style={{ fontSize: props.fsize }}>
+        <div
+            onClick={(e) => { props.onOption(props.first_option); e.stopPropagation(); }}
+            className={`w-fit h-fit font-semibold select-none flex justify-center cursor-pointer ease-in-out duration-300 items-center hover:scale-125 ${props.root !== "404" ? "text-white font-semibold" : "font-thin"}`} style={{ fontSize: props.fsize }}>
             {(props.first_option && props.root !== "404") ? props.first_option : props.root}
         </div>
         <div className="w-fit h-fit font-thin select-none flex justify-center items-center" style={{ fontSize: props.fsize }}>
@@ -17,7 +20,9 @@ const LinerContentPC = (props: { fsize: string, root: string, first_option: stri
         <div className="w-fit h-fit font-thin select-none flex justify-center items-center" style={{ fontSize: props.fsize }}>
             {props.root}
         </div>
-        <div className={`w-fit h-fit select-none flex justify-center cursor-pointer ease-in-out duration-300  items-center hover:scale-125 ${props.root !== "404" ? "text-white font-semibold" : "font-thin"}`} style={{ fontSize: props.fsize }}>
+        <div
+            onClick={(e) => { props.onOption(props.second_option); e.stopPropagation(); }}
+            className={`w-fit h-fit select-none flex justify-center cursor-pointer ease-in-out duration-300  items-center hover:scale-125 ${props.root !== "404" ? "text-white font-semibold" : "font-thin"}`} style={{ fontSize: props.fsize }}>
             {(props.second_option && props.root !== "404") ? props.second_option : props.root}
         </div>
         <div className="w-fit h-fit font-thin select-none flex justify-center items-center" style={{ fontSize: props.fsize }}>
@@ -30,13 +35,15 @@ const LinerContentPC = (props: { fsize: string, root: string, first_option: stri
 
 }
 
-const LinerContentMobile = (props: { fsize: string, root: string, option: string }) => {
+const LinerContentMobile = (props: { fsize: string, root: string, option: string, onOption: any }) => {
 
     return <div className="flex justify-around text-neutral-500">
         <div className="w-fit h-fit font-thin select-none flex justify-center items-center" style={{ fontSize: props.fsize }}>
             {props.root}
         </div>
-        <div className={`w-fit h-fit select-none flex justify-center cursor-pointer ease-in-out duration-300 items-center hover:scale-125 ${props.root !== "404" ? "text-white font-semibold" : "font-thin"}`} style={{ fontSize: props.fsize }}>
+        <div
+            onClick={(e) => { props.onOption(props.option); e.stopPropagation(); }}
+            className={`w-fit h-fit select-none flex justify-center cursor-pointer ease-in-out duration-300 items-center hover:scale-125 ${props.root !== "404" ? "text-white font-semibold" : "font-thin"}`} style={{ fontSize: props.fsize }}>
             {(props.option && props.root !== "404") ? props.option : props.root}
         </div>
         <div className="w-fit h-fit font-thin select-none flex justify-center items-center" style={{ fontSize: props.fsize }}>
@@ -75,43 +82,121 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
 
     useEffect(onResize.bind(this), [router.query])
 
-    return <motion.div className={`w-screen min-h-screen md:h-screen flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`} >
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupOption, setPopupOption] = useState<any>()
 
-        <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
+    return <motion.div
+        className={`w-screen min-h-screen md:h-screen flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`}
+        onClick={() => {
+            setShowPopup(false);
+        }}
+    >
+
+        <Transitional_ZoomIn instant StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
             {
                 !usePC ? mbOptions?.map((option, index) => {
 
                     return <Filler key={index} left={index % 2 == 0} >
-                        <LinerContentMobile fsize={fsize} root={root as string} option={option} />
+                        <LinerContentMobile fsize={fsize} root={root as string} onOption={(o) => {
+                            if (o !== root)
+                                setPopupOption(o);
+                            setShowPopup(o !== root);
+                        }} option={option} />
                     </Filler>
 
                 }) : pcOptions?.map((option, index) => {
 
                     return <Filler key={index} left={index % 2 == 0} >
-                        <LinerContentPC fsize={fsize} root={root as string} first_option={option.first_option} second_option={option.second_option} />
+                        <LinerContentPC onOption={(o) => {
+                            if (o !== root)
+                                setPopupOption(o);
+                            setShowPopup(o !== root);
+                        }} fsize={fsize} root={root as string} first_option={option.first_option} second_option={option.second_option} />
                     </Filler>
                 })
             }
 
         </Transitional_ZoomIn>
 
-        <SplashScreen autostart root={root as string} onSplashExitStart={() => {
+        <SplashScreen disabled autostart root={root as string} onSplashExitStart={() => {
             setSplashOut(true);
         }} />
+
+        <Popup show={showPopup} activeOption={popupOption} options={mbOptions} dataset={dataset} setActiveOption={(o) => { setPopupOption(o) }} onClose={() => { setShowPopup(false) }} />
 
     </motion.div >
 }
 
 export default binyanei;
 
-class Word {
-    public word: string
-    public meaning: string
-    constructor(word: string, meaning: string) {
-        this.word = word;
-        this.meaning = meaning;
-    }
+
+
+
+
+const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options }) => {
+
+    return show && <motion.div
+        initial={{ y: 500 }}
+        animate={{
+            y: 0,
+        }}
+        className="w-screen h-screen absolute pointer-events-none flex justify-center items-center"    >
+        <motion.div onClick={(e) => { e.stopPropagation() }} className=" w-11/12 h-4/6 md:w-3/6 md:h-4/6 rounded-xl backdrop-blur-md flex flex-col justify-center items-center pointer-events-auto border border-neutral-800" style={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}>
+
+            <div className="w-full h-full flex items-center justify-start flex-col">
+
+                <div className="text-4xl md:text-4xl font-semibold  px-8 pb-4 pt-2    md:px-8 md:pb-6 md:pt-2 flex justify-center items-center">
+                    {activeOption} - {dataset.root}
+                </div>
+
+                <div className="w-full h-full flex justify-between">
+                    <div className="hidden md:flex flex-col justify-center items-center mx-8 h-full">
+                        {
+                            options.map((option, index) => {
+                                return <div key={index} className={`py-2 cursor-pointer text-2xl w-full ${(option === activeOption) ? "text-white font-semibold" : "text-neutral-400"}`}
+                                    onClick={() => { setActiveOption(option) }}
+                                >
+                                    {option}
+                                </div>
+                            })
+                        }
+                    </div>
+                    <div className="flex flex-col h-full p-4 md:p-8 overflow-scroll" dir="rtl">
+                        {
+                            dataset[activeOption].map((word: Word, index) => {
+                                return <div key={index} className=" text-lg md:text-2xl flex my-4 pb-4">
+
+                                    <div className="font-semibold mx-1">
+                                        {word.word}
+                                    </div>
+                                    <div className="mx-1 flex">
+                                        -
+                                        <div className="flex flex-col mx-1">
+                                            {word.meaning.map((m, i) => {
+                                                return <div key={i}>{m}</div>
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            })
+                        }
+                    </div>
+
+                </div>
+
+            </div>
+
+        </motion.div>
+    </motion.div>
 }
+
+
+
+
+
+
+
+
 
 export const getStaticPaths = async () => {
 
@@ -159,12 +244,12 @@ export const getStaticPaths = async () => {
             { params: { r: "סבב" } }
         ],
         fallback: false, // can also be true or 'blocking'
+
     }
 }
 
 
-
-export const getStaticProps = async ({params}) => {
+export const getStaticProps = async ({ params }) => {
     const root = params.r;
 
     let api = "https://lashon-api.nozsa.com/api"
@@ -195,7 +280,6 @@ export const getStaticProps = async ({params}) => {
             first_option: root,
             second_option: root
         });
-
 
 
     return {
