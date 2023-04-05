@@ -35,9 +35,10 @@ const RootCard = ({ root }: { root: string }) => {
     </a>
 }
 
+export const getStaticProps = async ({ params }) => {
 
-export const getStaticProps = async (context) => {
-    let resp = await fetch('http://next.internal:3000/api/allRoots');
+    let api = "https://lashon-api.nozsa.com/api";
+    let resp = await fetch(`${api}/allRoots`);
 
     return {
         props: {
@@ -45,3 +46,4 @@ export const getStaticProps = async (context) => {
         },
     }
 }
+

@@ -113,9 +113,64 @@ class Word {
     }
 }
 
-export const getServerSideProps = async (context) => {
-    const root = context.query.r;
-    let resp = await fetch("http://next.internal:3000/api/compiledWord?root=" + root);
+export const getStaticPaths = async () => {
+
+    return {
+        paths: [
+            { params: { r: "אבד" } },
+            { params: { r: "אמר" } },
+            { params: { r: "בחן" } },
+            { params: { r: "בטח" } },
+            { params: { r: "גבר" } },
+            { params: { r: "גנן" } },
+            { params: { r: "דלק" } },
+            { params: { r: "חבר" } },
+            { params: { r: "חדש" } },
+            { params: { r: "חזק" } },
+            { params: { r: "חזר" } },
+            { params: { r: "חלל" } },
+            { params: { r: "חמץ" } },
+            { params: { r: "טבע" } },
+            { params: { r: "טען" } },
+            { params: { r: "יבש" } },
+            { params: { r: "כפף" } },
+            { params: { r: "למד" } },
+            { params: { r: "נגד" } },
+            { params: { r: "נהג" } },
+            { params: { r: "לחם" } },
+            { params: { r: "מלך" } },
+            { params: { r: "סבר" } },
+            { params: { r: "סכם" } },
+            { params: { r: "פתח" } },
+            { params: { r: "צדק" } },
+            { params: { r: "צפה" } },
+            { params: { r: "קבל" } },
+            { params: { r: "קום" } },
+            { params: { r: "שאל" } },
+            { params: { r: "שמן" } },
+            { params: { r: "שער" } },
+            { params: { r: "תקף" } },
+            { params: { r: "פסק" } },
+            { params: { r: "עשה" } },
+            { params: { r: "עקר" } },
+            { params: { r: "ענה" } },
+            { params: { r: "עלה" } },
+            { params: { r: "עגל" } },
+            { params: { r: "סבב" } }
+        ],
+        fallback: false, // can also be true or 'blocking'
+    }
+}
+
+
+
+export const getStaticProps = async ({params}) => {
+    const root = params.r;
+
+    let api = "https://lashon-api.nozsa.com/api"
+    let resp = await fetch(`${api}/compiledWord?root=${root}`);
+
+
     let optionSet = await resp.json();
     if (optionSet.length === 0)
         return {
@@ -135,7 +190,7 @@ export const getServerSideProps = async (context) => {
         });
     }
 
-    while(pcOptions.length < 7) 
+    while (pcOptions.length < 7)
         pcOptions.push({
             first_option: root,
             second_option: root
