@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgres://ab54402e71344f8cae42d4fc09182448:bfc7ee77e8b242279673a3d325b4deb5@207.154.197.15:5432/pealim?schema=pealim"
+}
+
+model Word {
+  id Int @id @default(autoincrement())
+
+  root Root @relation(fields: [rootId], references: [id])
+  rootId Int
+
+  word            String
+  type            String
+  part_of_speech  String
+  modifer_pattern String
+  meaning         String[]
+}
+
+model Root {
+  id Int @id @default(autoincrement())
+
+  root  String @unique
+  words Word[]
+}

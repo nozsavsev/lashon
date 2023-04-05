@@ -1,35 +1,47 @@
-//@ts-nocheck
-
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import React, { Component, ReactElement, useEffect, useState } from 'react'
-import SplashScreen from "../components/Splash";
+import React, { Component, ReactElement, useCallback, useEffect, useState } from 'react'
+import Filler from "../components/Filler";
 import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
+import root_database from "../root_database";
+//import axios from 'axios';
 
-const binyanei = ({ }: any) => {
-
-    const router = useRouter();
-
-    return <motion.div className={`w-screen min-h-screen md:h-screen flex items-center justify-center ease-in-out duration-300 text-black bg-white`}>
-
-
-        <RootCard root="חשב" />
-
-    </motion.div >
-}
-
-
-
-const RootCard = (props: { root: string, }) => {
+const binyanei = ({ roots }: { roots: string[] }) => {
 
     const router = useRouter();
 
-    return <div style={{ fontSize: "20rem" }} className="font-semibold select-none cursor-pointer" onClick={() => router.push(`/root?r=${props.root}`)}>
-        {props.root}
-    </div>
-
+    return <div className={`w-screen min-h-screen text-black bg-white flex flex-wrap justify-center items-center`}>
+        {
+            roots.map(root => <RootCard key={root} root={root} />)
+        }
+    </div >
 }
 
 
 
 export default binyanei;
+
+
+const RootCard = ({ root }: { root: string }) => {
+
+    const router = useRouter();
+
+    return <a
+        className="flex items-center justify-center bg-white shrink-0 text-7xl rounded-lg overflow-visivle h-fit select-none cursor-pointer"
+        href={`/${root}`}>
+        <div className="w-full h-full px-12 py-8 hover:scale-150 transition ease-in-out duration-300 z-10 hover:z-0">
+            {root}
+        </div>
+    </a>
+}
+
+
+export const getServerSideProps = async (context) => {
+    let resp = await fetch('http://next.internal:3000/api/allRoots');
+
+    return {
+        props: {
+            roots: (await resp.json()).map(root => root.root)
+        },
+    }
+}

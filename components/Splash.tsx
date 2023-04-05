@@ -17,7 +17,7 @@ const SplashScreen = (props: { root: string, onSplashExitStart: () => void, disa
             setInterval(() => {
                 setInitialEnded(true)
                 setClicked(true)
-            }, 200);
+            }, 500);
         }
 
     }, [])
