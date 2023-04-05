@@ -36,7 +36,7 @@ const RootCard = ({ root }: { root: string }) => {
 }
 
 
-export const getServerSideProps = async (context) => {
+export const getStaticProps = async (context) => {
     let resp = await fetch('http://next.internal:3000/api/allRoots');
 
     return {
