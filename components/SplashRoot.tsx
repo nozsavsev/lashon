@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const SplashScreen = (props: { root: string, onSplashExitStart: () => void, disabled?: boolean, instant?: boolean, autostart?: boolean }) => {
+const SplashScreenRoot = (props: { root: string, onSplashExitStart: () => void, disabled?: boolean, instant?: boolean, autostart?: boolean }) => {
 
     const [clicked, setClicked] = useState(false);
     const [initialEnded, setInitialEnded] = useState(false);
@@ -50,4 +50,4 @@ const SplashScreen = (props: { root: string, onSplashExitStart: () => void, disa
         </motion.div >
 }
 
-export default SplashScreen;
+export default SplashScreenRoot;

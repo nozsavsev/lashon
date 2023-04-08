@@ -43,6 +43,7 @@
     "react-file-picker": "^0.0.6",
     "react-i18next": "^12.2.0",
     "react-image-crop": "^10.0.9",
+    "react-matrix-effect": "^1.1.0",
     "react-select": "^5.7.0",
     "styled-components": "^5.3.8",
     "swr": "^2.0.4",

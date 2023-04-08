@@ -1,14 +1,28 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import React, { Component, ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { Component, ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 import Filler from "../components/Filler";
-import SplashScreen from "../components/Splash";
+import SplashScreenRoot from "../components/SplashRoot";
 import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
 import { Word } from "@prisma/client";
 
 const LinerContentPC = (props: { fsize: string, root: string, first_option: string, second_option: string, onOption: any }) => {
 
-    return <div className="flex justify-around text-neutral-500">
+    const onResize = () => {
+        setWindowWidth(window.innerWidth);
+        setWindowHeight(window.innerHeight);
+    }
+
+    const [windowWidth, setWindowWidth] = useState(0);
+    const [windowHeight, setWindowHeight] = useState(0);
+
+    useEffect(() => {
+        window.addEventListener("resize", onResize.bind(this))
+        onResize();
+    }, [])
+
+
+    return <div className="flex justify-around text-neutral-500" style={{ lineHeight: `${windowHeight / 7}px` }}>
         <div
             onClick={(e) => { props.onOption(props.first_option); e.stopPropagation(); }}
             className={`w-fit h-fit font-semibold select-none flex justify-center cursor-pointer ease-in-out duration-300 items-center hover:scale-125 ${props.root !== "404" ? "text-white font-semibold" : "font-thin"}`} style={{ fontSize: props.fsize }}>
@@ -57,19 +71,24 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
 
     const [splashOut, setSplashOut] = useState(false);
     const [windowWidth, setWindowWidth] = useState(0);
+    const [windowHeight, setWindowHeight] = useState(0);
     const [usePC, setUsePC] = useState(false);
     const [fsize, setFsize] = useState("0rem");
 
     const router = useRouter();
 
-    const onResize = useCallback(() => {
-
+    const onResize = () => {
         let maxOpLen = Object.keys(dataset).sort((a, b) => b.length - a.length)[0].length;
         let slen = ((window.innerWidth > 768) ? root.length * 4 : root.length * 2) + maxOpLen;
 
+        let fsizeX = (window.innerWidth / (((window.innerWidth > 768) ? 0.7 : 0.5) * slen));
+        let fsizeY_max = window.innerHeight / 7
+
         setWindowWidth(window.innerWidth);
-        setFsize((window.innerWidth / (((window.innerWidth > 768) ? 0.7 : 0.5) * slen)) + "px")
-    }, [router.query])
+        setWindowHeight(window.innerHeight);
+
+        setFsize((fsizeX <= fsizeY_max ? fsizeX : fsizeY_max) + "px")
+    }
 
     useEffect(() => {
         window.addEventListener("resize", onResize.bind(this))
@@ -80,19 +99,17 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
         setUsePC(windowWidth > 768);
     }, [windowWidth])
 
-    useEffect(onResize.bind(this), [router.query])
-
     const [showPopup, setShowPopup] = useState(false);
-    const [popupOption, setPopupOption] = useState<any>()
+    const [popupOption, setPopupOption] = useState<any>(mbOptions[0])
 
     return <motion.div
-        className={`w-screen min-h-screen md:h-screen flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`}
+        className={`w-screen min-h-screen md:h-screen overflow-scroll flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`}
         onClick={() => {
             setShowPopup(false);
         }}
     >
 
-        <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
+        <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-fit shrink-0 flex flex-col">
             {
                 !usePC ? mbOptions?.map((option, index) => {
 
@@ -118,7 +135,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
 
         </Transitional_ZoomIn>
 
-        <SplashScreen autostart root={root as string} onSplashExitStart={() => {
+        <SplashScreenRoot autostart root={root as string} onSplashExitStart={() => {
             setSplashOut(true);
         }} />
 
@@ -135,59 +152,135 @@ export default binyanei;
 
 const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options }) => {
 
-    return show && <motion.div
-        initial={{ y: 500 }}
-        animate={{
-            y: 0,
-        }}
-        className="w-screen h-screen absolute pointer-events-none flex justify-center items-center"    >
-        <motion.div onClick={(e) => { e.stopPropagation() }} className=" w-11/12 h-4/6 md:w-3/6 md:h-4/6 rounded-xl backdrop-blur-md flex flex-col justify-center items-center pointer-events-auto border border-neutral-800" style={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}>
 
-            <div className="w-full h-full flex items-center justify-start flex-col">
+    const keyDownHandler = useCallback((event) => {
 
-                <div className="text-4xl md:text-4xl font-semibold  px-8 pb-4 pt-2    md:px-8 md:pb-6 md:pt-2 flex justify-center items-center">
-                    {activeOption} - {dataset.root}
-                </div>
+        let locOpt = null;
 
-                <div className="w-full h-full flex justify-between">
-                    <div className="hidden md:flex flex-col justify-center items-center mx-8 h-full">
-                        {
-                            options.map((option, index) => {
-                                return <div key={index} className={`py-2 cursor-pointer text-2xl w-full ${(option === activeOption) ? "text-white font-semibold" : "text-neutral-400"}`}
-                                    onClick={() => { setActiveOption(option) }}
-                                >
-                                    {option}
-                                </div>
-                            })
-                        }
-                    </div>
-                    <div className="flex flex-col h-full p-4 md:p-8 overflow-scroll" dir="rtl">
-                        {
-                            dataset[activeOption].map((word: Word, index) => {
-                                return <div key={index} className=" text-lg md:text-2xl flex my-4 pb-4">
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+            let index = options.indexOf(activeOption);
+            if (index < options.length - 1) { setActiveOption(options[index + 1]); locOpt = options[index + 1]; }
+            else { setActiveOption(options[0]); locOpt = options[0]; }
+        }
 
-                                    <div className="font-semibold mx-1">
-                                        {word.word}
-                                    </div>
-                                    <div className="mx-1 flex">
-                                        -
-                                        <div className="flex flex-col mx-1">
-                                            {word.meaning.map((m, i) => {
-                                                return <div key={i}>{m}</div>
-                                            })}
-                                        </div>
-                                    </div>
-                                </div>
-                            })
-                        }
-                    </div>
+        if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+            let index = options.indexOf(activeOption);
+            if (index > 0) { setActiveOption(options[index - 1]); locOpt = options[index - 1]; }
+            else { setActiveOption(options[options.length - 1]); locOpt = options[options.length - 1]; }
+        }
 
-                </div>
 
-            </div>
+        if (scrollerRef.current) {
+            let index = options.indexOf(locOpt);
+            console.log(index);
+            let offset = (index * 50) - 50;
+            scrollerRef.current.scrollTo({ top: offset, behavior: "smooth" });
+        }
+
+
+    }, [activeOption])
+
+    useEffect(() => {
+
+        document.addEventListener("keydown", keyDownHandler);
+
+        return () => {
+            document.removeEventListener("keydown", keyDownHandler);
+        }
+
+    }, [activeOption])
+
+
+    const scrollerRef = useRef<any>(null);
+
+    return show && <>
+
+        <motion.div
+            onScroll={(e) => { e.stopPropagation() }}
+            initial={{ opacity: 0, backgroundColor: "black" }}
+            animate={{ opacity: 0.75, backgroundColor: "black" }}
+            className="bg-black top-0 left-0 w-screen h-full fixed">
+
+            <div className="bg-black w-screen sticky" />
 
         </motion.div>
-    </motion.div>
+
+        <motion.div
+            onScroll={(e) => { e.stopPropagation() }}
+            initial={{ scale: 0.5 }}
+            animate={{
+                scale: 1,
+            }}
+            className="w-screen h-full fixed pointer-events-none flex justify-center items-center">
+
+
+            <motion.div
+                onClick={(e) => { e.stopPropagation() }}
+                className=" w-11/12 h-4/6 md:w-3/6 md:h-4/6 overflow-hidden rounded-xl backdrop-blur-md flex flex-col justify-center items-center pointer-events-auto border border-neutral-800"
+                style={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}
+            >
+
+                <div className="w-full h-full flex justify-between p-0 m-0">
+
+                    <div className="w-full lg:w-1/6 md:w-2/6 overflow-y-scroll hidden lg:block" ref={scrollerRef}>
+                        <div className="hidden lg:flex items-center flex-col w-full justify-center font-thin">
+                            {
+                                options?.map((option, index) => {
+                                    return <div
+                                        key={index}
+                                        className={`shrink-0 py-2 whitespace-nowrap cursor-pointer text-2xl hidden lg:block
+                                    ${(option === activeOption) ? "text-white font-semibold" : "text-neutral-400"} 
+                                    ${index === options.length - 1 ? "mb-8" : ""} 
+                                    ${index === 0 ? "mt-8" : ""}
+                                    `}
+                                        onClick={() => {
+                                            setActiveOption(option)
+                                            let offset = (index * 50) - 50;
+                                            scrollerRef.current.scrollTo({ top: offset, behavior: "smooth" });
+                                        }}
+                                    >
+                                        {option}
+                                    </div>
+                                })
+                            }
+                        </div>
+                    </div>
+
+                    <div className="lg:w-5/6 w-full overflow-visible">
+
+                        <div className="flex">
+                            <div className="w-full text-4xl md:text-4xl font-semibold pb-4 pt-2 px-0 md:pb-6 md:pt-4 flex justify-center items-center">
+                                {activeOption} - {dataset.root}
+                            </div>
+
+                            <div className="w-0 lg:w-3/12 hidden lg:block" />
+                        </div>
+
+                        <div className=" m-3 md:m-8 lg:block flex items-start justify-scenter" dir="rtl">
+                            {
+                                dataset[activeOption]?.map((word: Word, index) => {
+                                    return <div key={index} className=" text-lg md:text-2xl flex my-4 pb-4">
+
+                                        <div className="font-semibold mx-1">
+                                            {word.word}
+                                        </div>
+                                        <div className="mx-1 flex">
+                                            -
+                                            <div className="flex flex-col mx-1">
+                                                {word.meaning.map((m, i) => {
+                                                    return <div key={i}>{m}</div>
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
+    </>
 }
 
 
