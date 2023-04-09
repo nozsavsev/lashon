@@ -36,7 +36,8 @@ const SplashHello = (props: { onSplashExitStart: () => void, disabled?: boolean,
                     scale: clicked ? 30 : 1,
                 }}
                 transition={{ duration: props.instant ? 0 : initialEnded ? 0.5 : 0.3, }}
-                className="font-semibold cursor-pointer"
+                className="font-thin cursor-pointer"
+                dir="rtl"
                 style={{ fontSize: '15vw' }}
                 onAnimationStart={() => {
                     if (initialEnded)
@@ -44,9 +45,9 @@ const SplashHello = (props: { onSplashExitStart: () => void, disabled?: boolean,
                             props.onSplashExitStart()
                 }}
                 onAnimationComplete={() => initialEnded ? setSecondEnded(true) : setInitialEnded(true)}>
-               
-               Hello
-               
+
+                שלום!
+
             </motion.div>
 
         </motion.div >
