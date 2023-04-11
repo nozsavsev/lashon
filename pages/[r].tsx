@@ -7,6 +7,7 @@ import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
 import { Word } from "@prisma/client";
 import { useSwipeable } from "react-swipeable";
 import AboutWidget from "../components/AboutWidget";
+import Head from "next/head";
 
 const LinerContentPC = (props: { fsize: string, root: string, first_option: string, second_option: string, onOption: any }) => {
 
@@ -114,12 +115,32 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
     const [popupOption, setPopupOption] = useState<any>(mbOptions[0])
 
     return <>
+
+
+        <Head>
+            <title>Lashon - by Ilia Nozdrachev</title>
+            <link rel="icon" type="image/x-icon" href={splashOut ? "/favicon_black.png" : "/favicon_white.png"} />
+
+            <meta property="og:title" content={root} />
+            <meta property="og:site_name" content="Lashon" />
+            <meta property="og:url" content="https://lashon.nozsa.com" />
+            <meta property="og:description" content={`${root} and all it's words`} />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="https://lashon.nozsa.com/favicon_black.png" />
+
+        </Head>
+
+
         <motion.div
             className={`w-screen min-h-screen overflow-scroll flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white h-screen overflow-hidden"}`}
             onClick={() => {
                 setShowPopup(false);
             }}
         >
+
+            <Head>
+                <title>{root}</title>
+            </Head>
 
             <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
                 {
@@ -146,7 +167,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
                 }
             </Transitional_ZoomIn>
 
-            <SplashScreenRoot root={root as string} onSplashExitStart={() => {
+            <SplashScreenRoot autostart root={root as string} onSplashExitStart={() => {
                 setSplashOut(true);
             }} />
 

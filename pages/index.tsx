@@ -8,6 +8,7 @@ import SplashHello from "../components/SplashHello";
 
 import words from "../words";
 import AboutWidget from "../components/AboutWidget";
+import Head from "next/head";
 
 const binyanei = ({ roots }: { roots: string[] }) => {
 
@@ -16,6 +17,18 @@ const binyanei = ({ roots }: { roots: string[] }) => {
     const [splashOut, setSplashOut] = useState(false);
 
     return <>
+        <Head>
+            <title>Lashon - by Ilia Nozdrachev</title>
+            <link rel="icon" type="image/x-icon" href={!splashOut ? "/favicon_black.png" : "/favicon_white.png"} />
+
+            <meta property="og:title" content="Lashon - by Ilia Nozdrachev" />
+            <meta property="og:site_name" content="Lashon" />
+            <meta property="og:url" content="https://lashon.nozsa.com" />
+            <meta property="og:description" content="40 roots with their words!" />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="https://lashon.nozsa.com/favicon_black.png" />
+        </Head>
+        
         <div className={`w-screen h-screen text-black transition-colors ease-in-out duration-300 ${splashOut ? "bg-white" : "bg-black overflow-hidden"}`}>
 
             <Transitional_ZoomIn delay={0} StartTransition={splashOut} className="flex flex-wrap item-center justify-center w-screen min-h-screen grid-cols-5">
@@ -34,7 +47,7 @@ const binyanei = ({ roots }: { roots: string[] }) => {
                 setSplashOut(true);
             }} />
         </div >
-        <AboutWidget light={splashOut}/>
+        <AboutWidget light={splashOut} />
     </>
 
 }
