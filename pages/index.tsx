@@ -7,6 +7,7 @@ import root_database from "../root_database";
 import SplashHello from "../components/SplashHello";
 
 import words from "../words";
+import AboutWidget from "../components/AboutWidget";
 
 const binyanei = ({ roots }: { roots: string[] }) => {
 
@@ -14,24 +15,27 @@ const binyanei = ({ roots }: { roots: string[] }) => {
 
     const [splashOut, setSplashOut] = useState(false);
 
-    return <div className={`w-screen h-screen text-black transition-colors ease-in-out duration-300 ${splashOut ? "bg-white" : "bg-black"}`}>
+    return <>
+        <div className={`w-screen h-screen text-black transition-colors ease-in-out duration-300 ${splashOut ? "bg-white" : "bg-black"}`}>
 
-        <Transitional_ZoomIn delay={0} StartTransition={splashOut} className="flex flex-wrap item-center justify-center w-screen min-h-screen grid-cols-5">
-            {
-                roots.map(root => {
-                    //randomly choose between 1 and -1
-                    let x = (Math.random() < 0.5 ? -1 : 1);
-                    let y = (Math.random() < 0.5 ? -1 : 1);
+            <Transitional_ZoomIn delay={0} StartTransition={splashOut} className="flex flex-wrap item-center justify-center w-screen min-h-screen grid-cols-5">
+                {
+                    roots.map(root => {
+                        //randomly choose between 1 and -1
+                        let x = (Math.random() < 0.5 ? -1 : 1);
+                        let y = (Math.random() < 0.5 ? -1 : 1);
 
-                    return <RootCard StartTransition={splashOut} key={root} root={root} x={100 * x} y={100 * y} />
-                })
-            }
-        </Transitional_ZoomIn>
+                        return <RootCard StartTransition={splashOut} key={root} root={root} x={100 * x} y={100 * y} />
+                    })
+                }
+            </Transitional_ZoomIn>
 
-        <SplashHello onSplashExitStart={() => {
-            setSplashOut(true);
-        }} />
-    </div >
+            <SplashHello onSplashExitStart={() => {
+                setSplashOut(true);
+            }} />
+        </div >
+        <AboutWidget light={splashOut}/>
+    </>
 
 }
 
@@ -45,7 +49,6 @@ const RootCard = ({ root, x, y, StartTransition }: { root: string, x: number, y:
     const router = useRouter();
 
     return <motion.a
-
         initial={{ y: y, x: x, opacity: 0 }}
         animate={{ y: StartTransition ? 0 : y, x: StartTransition ? 0 : x, opacity: StartTransition ? 1 : 0 }}
         transition={{ duration: 0.5, ease: "easeInOut", delay: 0.4 }}

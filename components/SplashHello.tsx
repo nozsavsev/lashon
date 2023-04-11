@@ -37,7 +37,6 @@ const SplashHello = (props: { onSplashExitStart: () => void, disabled?: boolean,
                 }}
                 transition={{ duration: props.instant ? 0 : initialEnded ? 0.5 : 0.3, }}
                 className="font-thin cursor-pointer"
-                dir="rtl"
                 style={{ fontSize: '15vw' }}
                 onAnimationStart={() => {
                     if (initialEnded)
@@ -45,8 +44,15 @@ const SplashHello = (props: { onSplashExitStart: () => void, disabled?: boolean,
                             props.onSplashExitStart()
                 }}
                 onAnimationComplete={() => initialEnded ? setSecondEnded(true) : setInitialEnded(true)}>
-
-                שלום!
+               
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }} className="flex flex-col justify-start items-start my-16">
+                    <motion.div className="text-neutral-500 text-2xl md:text-4xl">
+                        Powered by
+                    </motion.div>
+                    <motion.div className="text-5xl md:text-8xl">
+                        Ilia Nozdrachev
+                    </motion.div>
+                </motion.div>
 
             </motion.div>
 

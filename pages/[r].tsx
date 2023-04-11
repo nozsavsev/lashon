@@ -6,6 +6,7 @@ import SplashScreenRoot from "../components/SplashRoot";
 import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
 import { Word } from "@prisma/client";
 import { useSwipeable } from "react-swipeable";
+import AboutWidget from "../components/AboutWidget";
 
 const LinerContentPC = (props: { fsize: string, root: string, first_option: string, second_option: string, onOption: any }) => {
 
@@ -112,45 +113,48 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
     const [showPopup, setShowPopup] = useState(false);
     const [popupOption, setPopupOption] = useState<any>(mbOptions[0])
 
-    return <motion.div
-        className={`w-screen min-h-screen overflow-scroll flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`}
-        onClick={() => {
-            setShowPopup(false);
-        }}
-    >
+    return <>
+        <motion.div
+            className={`w-screen min-h-screen overflow-scroll flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`}
+            onClick={() => {
+                setShowPopup(false);
+            }}
+        >
 
-        <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
-            {
-                !usePC ? mbOptions?.map((option, index) => {
+            <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
+                {
+                    !usePC ? mbOptions?.map((option, index) => {
 
-                    return <Filler key={index} left={index % 2 == 0} >
-                        <LinerContentMobile fsize={fsize} root={root as string} onOption={(o) => {
-                            if (o !== root)
-                                setPopupOption(o);
-                            setShowPopup(o !== root);
-                        }} option={option} />
-                    </Filler>
+                        return <Filler key={index} left={index % 2 == 0} >
+                            <LinerContentMobile fsize={fsize} root={root as string} onOption={(o) => {
+                                if (o !== root)
+                                    setPopupOption(o);
+                                setShowPopup(o !== root);
+                            }} option={option} />
+                        </Filler>
 
-                }) : pcOptions?.map((option, index) => {
+                    }) : pcOptions?.map((option, index) => {
 
-                    return <Filler key={index} left={index % 2 == 0} >
-                        <LinerContentPC onOption={(o) => {
-                            if (o !== root)
-                                setPopupOption(o);
-                            setShowPopup(o !== root);
-                        }} fsize={fsize} root={root as string} first_option={option.first_option} second_option={option.second_option} />
-                    </Filler>
-                })
-            }
-        </Transitional_ZoomIn>
+                        return <Filler key={index} left={index % 2 == 0} >
+                            <LinerContentPC onOption={(o) => {
+                                if (o !== root)
+                                    setPopupOption(o);
+                                setShowPopup(o !== root);
+                            }} fsize={fsize} root={root as string} first_option={option.first_option} second_option={option.second_option} />
+                        </Filler>
+                    })
+                }
+            </Transitional_ZoomIn>
 
-        <SplashScreenRoot autostart root={root as string} onSplashExitStart={() => {
-            setSplashOut(true);
-        }} />
+            <SplashScreenRoot autostart root={root as string} onSplashExitStart={() => {
+                setSplashOut(true);
+            }} />
 
-        <Popup show={showPopup} activeOption={popupOption} options={mbOptions} dataset={dataset} setActiveOption={(o) => { setPopupOption(o) }} onClose={() => { setShowPopup(false) }} />
+            <Popup show={showPopup} activeOption={popupOption} options={mbOptions} dataset={dataset} setActiveOption={(o) => { setPopupOption(o) }} onClose={() => { setShowPopup(false) }} />
 
-    </motion.div >
+        </motion.div >
+        <AboutWidget light={!splashOut} />
+    </>
 }
 
 export default binyanei;
