@@ -15,7 +15,7 @@ const About = ({ roots }: { roots: string[] }) => {
 
     const [splashOut, setSplashOut] = useState(false);
 
-    return <motion.div layout className={`w-screen h-screen bg-black text-white transition-colors ease-in-out duration-300 flex flex-col justify-center items-center`}>
+    return <motion.div layout className={`w-screen pb-16 p-4 min-h-screen bg-black text-white transition-colors ease-in-out duration-300 flex flex-col justify-center items-center`}>
 
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }} className="flex flex-col justify-start items-start my-16">
@@ -31,13 +31,25 @@ const About = ({ roots }: { roots: string[] }) => {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="font-thin text-4xl">
             Hi there
         </motion.div>
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="font-thin text-3xl mb-16">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="font-thin text-3xl">
             This is my lashon project
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="flex flex-col justify-start text-2xl items-start my-8">
+
+            Basically what i did is
+            <ul className="list-disc ml-8 text-xl my-7">
+                <li>Downloaded all the words from pealim website</li>
+                <li>Created a database with all the words</li>
+                <li>Set up relations</li>
+                <li>Selected 40 roots</li>
+                <li>Designed & implemented all this</li>
+            </ul>
         </motion.div>
 
 
         <motion.a href="/" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.8 }} className="border text-3xl flex items-center justify-center border-white rounded-lg px-4 py-2">
-            check it out
+            Сheck it out
             <BsFillPlayFill className="ml-7" height="64" width="64" />
         </motion.a>
 
