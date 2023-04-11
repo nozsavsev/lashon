@@ -230,8 +230,8 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
     const scrollerRef = useRef<any>(null);
 
     const handlers = useSwipeable({
-        onSwipedLeft: (eventData) => swipeHandler("left"),
-        onSwipedRight: (eventData) => swipeHandler("right"),
+        onSwipedLeft: (eventData) => swipeHandler("right"),
+        onSwipedRight: (eventData) => swipeHandler("left"),
         onSwipedUp: (eventData) => swipeHandler("up"),
         onSwipedDown: (eventData) => swipeHandler("down"),
 
@@ -267,7 +267,7 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
 
                 <div className="w-full h-full flex justify-between p-0 m-0">
 
-                    <div className="w-full lg:w-1/6 md:w-2/6 overflow-y-scroll hidden lg:block" ref={scrollerRef}>
+                    <div className="w-full lg:w-1/6 md:w-2/6 mx-4 px-6 overflow-y-scroll hidden lg:block" ref={scrollerRef}>
                         <div className="hidden lg:flex items-center flex-col w-full justify-center font-thin">
                             {
                                 options?.map((option, index) => {

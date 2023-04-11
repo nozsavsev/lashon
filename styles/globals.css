@@ -47,3 +47,14 @@ input[type=number] {
 .spinner_left {
   animation: spin_left 60s linear infinite;
 }
+
+
+@media (max-width: 768px) {
+  .spinner_right {
+    animation: spin_right 10s linear infinite;
+  }
+
+  .spinner_left {
+    animation: spin_left 10s linear infinite;
+  }
+}
