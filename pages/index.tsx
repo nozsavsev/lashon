@@ -19,10 +19,9 @@ const binyanei = ({ roots }: { roots: string[] }) => {
 
         <Transitional_ZoomIn delay={0} StartTransition={splashOut} className="flex flex-wrap justify-around items-center w-screen min-h-screen grid-cols-5">
 
-
-            {
+            {                      
+                
                 roots.map(root => {
-
                     //randomly choose between 1 and -1
                     let x = (Math.random() < 0.5 ? -1 : 1);
                     let y = (Math.random() < 0.5 ? -1 : 1);
@@ -32,7 +31,7 @@ const binyanei = ({ roots }: { roots: string[] }) => {
             }
         </Transitional_ZoomIn>
 
-        <SplashHello  onSplashExitStart={() => {
+        <SplashHello onSplashExitStart={() => {
             setSplashOut(true);
         }} />
     </div >
@@ -71,4 +70,3 @@ export const getStaticProps = async ({ params }) => {
         },
     }
 }
-

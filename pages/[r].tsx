@@ -78,7 +78,16 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
     const router = useRouter();
 
     const onResize = () => {
-        let maxOpLen = Object.keys(dataset).sort((a, b) => b.length - a.length)[0].length;
+        
+        let maxMobileOption = mbOptions.map(o => o.replace(/[\u0591-\u05C7]/gm ,"")).sort((a, b) => b.length - a.length)[0];
+        
+        let maxPcOption = pcOptions.map(o => (o.first_option + o.second_option).replace(/[\u0591-\u05C7]/gm ,"")).sort((a, b) => b.length - a.length)[0];
+        console.log("maxMobileOption", maxMobileOption);
+        console.log("maxPcOption", maxPcOption);
+
+        let maxOpLen = (window.innerWidth > 768) ? maxPcOption.length : maxMobileOption.length * 1.5;
+
+
         let slen = ((window.innerWidth > 768) ? root.length * 4 : root.length * 2) + maxOpLen;
 
         let fsizeX = (window.innerWidth / (((window.innerWidth > 768) ? 0.7 : 0.5) * slen));
@@ -103,13 +112,13 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
     const [popupOption, setPopupOption] = useState<any>(mbOptions[0])
 
     return <motion.div
-        className={`w-screen min-h-screen md:h-screen overflow-scroll flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`}
+        className={`w-screen min-h-screen overflow-scroll flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`}
         onClick={() => {
             setShowPopup(false);
         }}
     >
 
-        <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-fit shrink-0 flex flex-col">
+        <Transitional_ZoomIn StartTransition={splashOut} className="w-full h-full shrink-0 flex flex-col">
             {
                 !usePC ? mbOptions?.map((option, index) => {
 
@@ -132,7 +141,6 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
                     </Filler>
                 })
             }
-
         </Transitional_ZoomIn>
 
         <SplashScreenRoot autostart root={root as string} onSplashExitStart={() => {
@@ -172,7 +180,7 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
 
         if (scrollerRef.current) {
             let index = options.indexOf(locOpt);
-            console.log(index);
+            (index);
             let offset = (index * 50) - 50;
             scrollerRef.current.scrollTo({ top: offset, behavior: "smooth" });
         }
@@ -199,7 +207,7 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
             onScroll={(e) => { e.stopPropagation() }}
             initial={{ opacity: 0, backgroundColor: "black" }}
             animate={{ opacity: 0.75, backgroundColor: "black" }}
-            className="bg-black top-0 left-0 w-screen h-full fixed">
+            className="bg-black top-0 left-0 w-screen h-screen fixed">
 
             <div className="bg-black w-screen sticky" />
 
@@ -211,12 +219,12 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
             animate={{
                 scale: 1,
             }}
-            className="w-screen h-full fixed pointer-events-none flex justify-center items-center">
+            className="w-screen h-screen top-0 left-0 fixed pointer-events-none flex justify-center items-center">
 
 
             <motion.div
                 onClick={(e) => { e.stopPropagation() }}
-                className=" w-11/12 h-4/6 md:w-3/6 md:h-4/6 overflow-hidden rounded-xl backdrop-blur-md flex flex-col justify-center items-center pointer-events-auto border border-neutral-800"
+                className="w-11/12 h-4/6 md:w-3/6 md:h-4/6 overflow-hidden rounded-xl backdrop-blur-md flex flex-col justify-center items-center pointer-events-auto border border-neutral-800"
                 style={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}
             >
 
@@ -246,7 +254,7 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
                         </div>
                     </div>
 
-                    <div className="lg:w-5/6 w-full overflow-visible">
+                    <div className="lg:w-5/6 w-full  overflow-visible">
 
                         <div className="flex">
                             <div className="w-full text-4xl md:text-4xl font-semibold pb-4 pt-2 px-0 md:pb-6 md:pt-4 flex justify-center items-center">
@@ -256,7 +264,7 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
                             <div className="w-0 lg:w-3/12 hidden lg:block" />
                         </div>
 
-                        <div className=" m-3 md:m-8 lg:block flex items-start justify-scenter" dir="rtl">
+                        <div className="m-3 md:m-8 lg:block flex items-start justify-scenter" dir="rtl">
                             {
                                 dataset[activeOption]?.map((word: Word, index) => {
                                     return <div key={index} className=" text-lg md:text-2xl flex my-4 pb-4">
