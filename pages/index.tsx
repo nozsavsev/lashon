@@ -5,7 +5,6 @@ import Filler from "../components/Filler";
 import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
 import root_database from "../root_database";
 import SplashHello from "../components/SplashHello";
-import WordCloud from 'react-d3-cloud';
 
 import words from "../words";
 

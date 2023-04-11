@@ -5,6 +5,7 @@ import Filler from "../components/Filler";
 import SplashScreenRoot from "../components/SplashRoot";
 import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
 import { Word } from "@prisma/client";
+import { useSwipeable } from "react-swipeable";
 
 const LinerContentPC = (props: { fsize: string, root: string, first_option: string, second_option: string, onOption: any }) => {
 
@@ -78,10 +79,10 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
     const router = useRouter();
 
     const onResize = () => {
-        
-        let maxMobileOption = mbOptions.map(o => o.replace(/[\u0591-\u05C7]/gm ,"")).sort((a, b) => b.length - a.length)[0];
-        
-        let maxPcOption = pcOptions.map(o => (o.first_option + o.second_option).replace(/[\u0591-\u05C7]/gm ,"")).sort((a, b) => b.length - a.length)[0];
+
+        let maxMobileOption = mbOptions.map(o => o.replace(/[\u0591-\u05C7]/gm, "")).sort((a, b) => b.length - a.length)[0];
+
+        let maxPcOption = pcOptions.map(o => (o.first_option + o.second_option).replace(/[\u0591-\u05C7]/gm, "")).sort((a, b) => b.length - a.length)[0];
         console.log("maxMobileOption", maxMobileOption);
         console.log("maxPcOption", maxPcOption);
 
@@ -108,7 +109,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
         setUsePC(windowWidth > 768);
     }, [windowWidth])
 
-    const [showPopup, setShowPopup] = useState(false);
+    const [showPopup, setShowPopup] = useState(true);
     const [popupOption, setPopupOption] = useState<any>(mbOptions[0])
 
     return <motion.div
@@ -188,6 +189,33 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
 
     }, [activeOption])
 
+    const swipeHandler = useCallback((direction: "up" | "down" | "left" | "right") => {
+
+        let locOpt = null;
+
+        if (direction === "right" || direction === "down") {
+            let index = options.indexOf(activeOption);
+            if (index < options.length - 1) { setActiveOption(options[index + 1]); locOpt = options[index + 1]; }
+            else { setActiveOption(options[0]); locOpt = options[0]; }
+        }
+
+        if (direction === "left" || direction === "up") {
+            let index = options.indexOf(activeOption);
+            if (index > 0) { setActiveOption(options[index - 1]); locOpt = options[index - 1]; }
+            else { setActiveOption(options[options.length - 1]); locOpt = options[options.length - 1]; }
+        }
+
+
+        if (scrollerRef.current) {
+            let index = options.indexOf(locOpt);
+            (index);
+            let offset = (index * 50) - 50;
+            scrollerRef.current.scrollTo({ top: offset, behavior: "smooth" });
+        }
+
+
+    }, [activeOption])
+
     useEffect(() => {
 
         document.addEventListener("keydown", keyDownHandler);
@@ -200,6 +228,14 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
 
 
     const scrollerRef = useRef<any>(null);
+
+    const handlers = useSwipeable({
+        onSwipedLeft: (eventData) => swipeHandler("left"),
+        onSwipedRight: (eventData) => swipeHandler("right"),
+        onSwipedUp: (eventData) => swipeHandler("up"),
+        onSwipedDown: (eventData) => swipeHandler("down"),
+
+    });
 
     return show && <>
 
@@ -214,6 +250,7 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
         </motion.div>
 
         <motion.div
+            {...handlers}
             onScroll={(e) => { e.stopPropagation() }}
             initial={{ scale: 0.5 }}
             animate={{
@@ -254,7 +291,7 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
                         </div>
                     </div>
 
-                    <div className="lg:w-5/6 w-full  overflow-visible">
+                    <div className="lg:w-5/6 w-full h-full flex flex-col overflow-visible">
 
                         <div className="flex">
                             <div className="w-full text-4xl md:text-4xl font-semibold pb-4 pt-2 px-0 md:pb-6 md:pt-4 flex justify-center items-center">
@@ -264,7 +301,7 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
                             <div className="w-0 lg:w-3/12 hidden lg:block" />
                         </div>
 
-                        <div className="m-3 md:m-8 lg:block flex items-start justify-scenter" dir="rtl">
+                        <div className="m-3 md:m-8 h-full lg:block flex flex-col items-start justify-scenter" dir="rtl">
                             {
                                 dataset[activeOption]?.map((word: Word, index) => {
                                     return <div key={index} className=" text-lg md:text-2xl flex my-4 pb-4">
@@ -284,7 +321,20 @@ const Popup = ({ show, onClose, activeOption, dataset, setActiveOption, options 
                                 })
                             }
                         </div>
+
+                        <div className="w-full h-fit flex lg:hidden my-3 items-center justify-center">
+                            {
+
+                                options?.map((option, index) => {
+                                    return <div className={`h-2 w-2 rounded-full mx-1 ${option === activeOption ? "bg-neutral-400" : "bg-neutral-800"}`} />
+
+                                })
+
+                            }
+                        </div>
+
                     </div>
+
                 </div>
             </motion.div>
         </motion.div>
