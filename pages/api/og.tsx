@@ -43,6 +43,7 @@ export default function handler(request: NextRequest) {
               lineHeight: 1.4,
               whiteSpace: 'pre-wrap',
             }}
+            dir='rtl'
           >
             
             {root}
