@@ -20,7 +20,7 @@ const About = ({ roots }: { roots: string[] }) => {
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }} className="flex flex-col justify-start items-start my-16">
             <motion.div className="text-neutral-500 text-2xl">
-                Powered by
+                Created By
             </motion.div>
             <motion.div className="text-5xl">
                 Ilia Nozdrachev
