@@ -21,10 +21,9 @@ const binyanei = ({ roots }: { roots: string[] }) => {
             <title>Lashon - by Ilia Nozdrachev</title>
             <link rel="icon" type="image/x-icon" href={!splashOut ? "/favicon_black.png" : "/favicon_white.png"} />
 
-            <meta property="og:title" content="Lashon - by Ilia Nozdrachev" />
-            <meta property="og:site_name" content="Lashon" />
+            <meta property="og:title" content="40 roots with their words!" />
+            <meta property="og:site_name" content="Lashon - by Ilia Nozdrachev" />
             <meta property="og:url" content="https://lashon.nozsa.com" />
-            <meta property="og:description" content="40 roots with their words!" />
             <meta property="og:type" content="website" />
             <meta property="og:image" content="https://lashon.nozsa.com/favicon_black.png" />
         </Head>

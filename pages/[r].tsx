@@ -124,7 +124,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
             <meta property="og:title" content={root} />
             <meta property="og:site_name" content="Lashon" />
             <meta property="og:url" content="https://lashon.nozsa.com" />
-            <meta property="og:description" content={`${root} and all it's words`} />
+            <meta property="og:description" content={`All words with ${root} root`} />
             <meta property="og:type" content="website" />
             <meta property="og:image" content="https://lashon.nozsa.com/favicon_black.png" />
 
