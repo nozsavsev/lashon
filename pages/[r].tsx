@@ -109,7 +109,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
         setUsePC(windowWidth > 768);
     }, [windowWidth])
 
-    const [showPopup, setShowPopup] = useState(true);
+    const [showPopup, setShowPopup] = useState(false);
     const [popupOption, setPopupOption] = useState<any>(mbOptions[0])
 
     return <motion.div
