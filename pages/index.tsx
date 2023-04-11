@@ -17,15 +17,13 @@ const binyanei = ({ roots }: { roots: string[] }) => {
     return <div className={`w-screen h-screen text-black transition-colors ease-in-out duration-300 ${splashOut ? "bg-white" : "bg-black"}`}>
 
         <Transitional_ZoomIn delay={0} StartTransition={splashOut} className="flex flex-wrap item-center justify-center w-screen min-h-screen grid-cols-5">
-
-            {                      
-                
+            {
                 roots.map(root => {
                     //randomly choose between 1 and -1
                     let x = (Math.random() < 0.5 ? -1 : 1);
                     let y = (Math.random() < 0.5 ? -1 : 1);
 
-                    return <RootCard key={root} root={root} x={100 * x} y={100 * y} />
+                    return <RootCard StartTransition={splashOut} key={root} root={root} x={100 * x} y={100 * y} />
                 })
             }
         </Transitional_ZoomIn>
@@ -42,15 +40,15 @@ const binyanei = ({ roots }: { roots: string[] }) => {
 export default binyanei;
 
 
-const RootCard = ({ root, x, y }: { root: string, x: number, y: number }) => {
+const RootCard = ({ root, x, y, StartTransition }: { root: string, x: number, y: number, StartTransition: boolean }) => {
 
     const router = useRouter();
 
     return <motion.a
-    
+
         initial={{ y: y, x: x, opacity: 0 }}
-        animate={{ y: 0, x: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeInOut", delay: 0.3 }}
+        animate={{ y: StartTransition ? 0 : y, x: StartTransition ? 0 : x, opacity: StartTransition ? 1 : 0 }}
+        transition={{ duration: 0.5, ease: "easeInOut", delay: 0.4 }}
         className="flex items-center w-1/2 md:w-fit justify-center shrink-0 md:text-7xl text-6xl rounded-lg overflow-visible h-fit select-none cursor-pointer"
         href={`/${root}`}>
         <div className="w-full h-full py-2 flex items-center justify-center px-4 md:px-12 md:py-8 hover:scale-150 transition ease-in-out duration-300 z-10 hover:z-0 font-thin">
