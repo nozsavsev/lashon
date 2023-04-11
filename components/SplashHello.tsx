@@ -23,7 +23,7 @@ const SplashHello = (props: { onSplashExitStart: () => void, disabled?: boolean,
     }, [])
 
     if (!secondEnded && !props.disabled)
-        return <motion.div className='w-screen h-screen flex items-center justify-center text-white select-none absolute top-0 left-0'
+        return <motion.div className='w-screen h-screen flex items-center justify-center text-white select-none fixed top-0 left-0'
             onClick={() => { if (!clicked) setClicked(true); }}
             animate={{ opacity: 1 }}
             transition={{ duration: props.instant ? 0 : initialEnded ? 0.5 : 0.3, }}>
@@ -43,6 +43,7 @@ const SplashHello = (props: { onSplashExitStart: () => void, disabled?: boolean,
                         if (props.onSplashExitStart)
                             props.onSplashExitStart()
                 }}
+
                 onAnimationComplete={() => initialEnded ? setSecondEnded(true) : setInitialEnded(true)}>
                
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }} className="flex flex-col justify-start items-start my-16">

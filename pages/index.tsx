@@ -16,7 +16,7 @@ const binyanei = ({ roots }: { roots: string[] }) => {
     const [splashOut, setSplashOut] = useState(false);
 
     return <>
-        <div className={`w-screen h-screen text-black transition-colors ease-in-out duration-300 ${splashOut ? "bg-white" : "bg-black"}`}>
+        <div className={`w-screen h-screen text-black transition-colors ease-in-out duration-300 ${splashOut ? "bg-white" : "bg-black overflow-hidden"}`}>
 
             <Transitional_ZoomIn delay={0} StartTransition={splashOut} className="flex flex-wrap item-center justify-center w-screen min-h-screen grid-cols-5">
                 {

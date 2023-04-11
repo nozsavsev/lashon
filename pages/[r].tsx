@@ -115,7 +115,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
 
     return <>
         <motion.div
-            className={`w-screen min-h-screen overflow-scroll flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white"}`}
+            className={`w-screen min-h-screen overflow-scroll flex items-center justify-center transition-colors ease-in-out duration-300 text-white ${splashOut ? "bg-black" : "bg-white h-screen overflow-hidden"}`}
             onClick={() => {
                 setShowPopup(false);
             }}
@@ -146,7 +146,7 @@ const binyanei = ({ root, dataset, pcOptions, mbOptions }: any) => {
                 }
             </Transitional_ZoomIn>
 
-            <SplashScreenRoot autostart root={root as string} onSplashExitStart={() => {
+            <SplashScreenRoot root={root as string} onSplashExitStart={() => {
                 setSplashOut(true);
             }} />
 
