@@ -6,7 +6,6 @@ import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
 import root_database from "../root_database";
 import SplashHello from "../components/SplashHello";
 
-import words from "../words";
 import AboutWidget from "../components/AboutWidget";
 import Head from "next/head";
 

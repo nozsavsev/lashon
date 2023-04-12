@@ -6,7 +6,6 @@ import Transitional_ZoomIn from "../components/Transitional_ZoomIn";
 import root_database from "../root_database";
 import SplashHello from "../components/SplashHello";
 
-import words from "../words";
 import AboutWidget from "../components/AboutWidget";
 
 const About = ({ roots }: { roots: string[] }) => {
@@ -16,6 +15,20 @@ const About = ({ roots }: { roots: string[] }) => {
     const [splashOut, setSplashOut] = useState(false);
 
     return <motion.div layout className={`w-screen pb-16 p-4 min-h-screen bg-black text-white transition-colors ease-in-out duration-300 flex flex-col justify-center items-center`}>
+
+
+        <Head>
+            <title>Lashon - by Ilia Nozdrachev</title>
+            <link rel="icon" type="image/x-icon" href={"/favicon_black.png"} />
+
+            <meta property="og:title" content="Read about my lashon project" />
+            <meta property="og:site_name" content="Lashon - by Ilia Nozdrachev" />
+            <meta property="og:url" content="https://lashon.nozsa.com/about" />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="https://lashon.nozsa.com/favicon_black.png" />
+        </Head>
+
+
 
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }} className="flex flex-col justify-start items-start my-16">
