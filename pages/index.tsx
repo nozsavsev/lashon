@@ -41,7 +41,7 @@ const binyanei = ({ roots }: { roots: string[] }) => {
                 }
             </Transitional_ZoomIn>
 
-            <SplashHello onSplashExitStart={() => {
+            <SplashHello autostart onSplashExitStart={() => {
                 setSplashOut(true);
             }} />
         </div >
